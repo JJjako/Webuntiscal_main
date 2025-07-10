@@ -1,5 +1,7 @@
 ## Webuntiscal_main
 Connects Webuntis with Google Calendar
+# Use
+* fetches Lessons, Exams and Homework from WebuntisAPI and imports it to googleCal
 # Setup
 * Have main to be the workingdir
 
