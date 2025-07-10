@@ -330,7 +330,6 @@ def add_event_to_notion(event_data, notion_token, database_id):
 daysintofuture = 3
 
 def authenticate():
-    os.chdir("untisxgcalandar")
     creds = None
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
