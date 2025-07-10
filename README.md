@@ -1,5 +1,6 @@
 ## Webuntiscal_main
 Connects Webuntis with Google Calendar
 # Setup
-Place credentials-file in the workingdir following https://developers.google.com/workspace/calendar/api/quickstart/
+Have main to be the workingdir
+Place credentials-file in main following https://developers.google.com/workspace/calendar/api/quickstart/
 Fill in config.py
