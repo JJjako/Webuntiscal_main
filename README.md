@@ -9,4 +9,4 @@ Connects Webuntis with Google Calendar
 
 * Fill in config.py
 
-* Run untis.py with python 1.13+
+* Run UntisCalenarUN.py with python 1.13+
