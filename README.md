@@ -8,3 +8,5 @@ Connects Webuntis with Google Calendar
 * Place credentials-file in main following https://developers.google.com/workspace/calendar/api/quickstart/python
 
 * Fill in config.py
+
+* Run untis.py with python 1.13+
