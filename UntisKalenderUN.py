@@ -531,77 +531,81 @@ def main():
             except Exception as e:
                 # print(f"Error processing event for {mensch[0]} - {mensch[1]}: {e}")
                 continue
-
-if __name__ == "__main__":
-    alles = fetch_homework()
-    hausis = alles[0]
-    klassenas  = alles[1]
-    class_services_data = alles[2]
-    print(class_services_data)
-    
-    main()
-def authenticate():
-    creds = None
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials.json", SCOPES
-            )
-            creds = flow.run_local_server(port=0)
-        with open("token.json", "w") as token:
-            token.write(creds.to_json())
-    return creds
-
-def event_key(event):
-    # Use summary, location, start, and end as the key
-    summary = event.get("summary", "")
-    location = event.get("location", "")
-    start = event["start"].get("dateTime") or event["start"].get("date")
-    end = event["end"].get("dateTime") or event["end"].get("date")
-    return (summary, location, start, end)
-
-def mainn():
-    
-    page_token = None
-    seen = set()
-    duplicates = []
+while True:
     try:
-        while True:
-            events_result = service.events().list(
-                calendarId='primary',
-                pageToken=page_token,
-                maxResults=2500,
-                singleEvents=True,
-                orderBy='startTime'
-            ).execute()
-            events = events_result.get('items', [])
-            for event in events:
-                key = event_key(event)
-                if key in seen:
-                    duplicates.append(event)
+        if __name__ == "__main__":
+            alles = fetch_homework()
+            hausis = alles[0]
+            klassenas  = alles[1]
+            class_services_data = alles[2]
+            print(class_services_data)
+            
+            main()
+        def authenticate():
+            creds = None
+            if os.path.exists("token.json"):
+                creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+            if not creds or not creds.valid:
+                if creds and creds.expired and creds.refresh_token:
+                    creds.refresh(Request())
                 else:
-                    seen.add(key)
-            page_token = events_result.get('nextPageToken')
-            if not page_token:
-                break
-        print(f"Found {len(duplicates)} duplicate events.")
-        if len(duplicates) == 0:
-            return
-        for event in duplicates:
-            try:
-                service.events().delete(calendarId='primary', eventId=event['id']).execute()
-                print(f"Deleted duplicate: {event.get('summary', '')} on {event['start']}")
-            except HttpError as error:
-                print(f"An error occurred: {error}")
-        mainn()
-    except Exception as e:
-        print(f"Error: {e}")
+                    flow = InstalledAppFlow.from_client_secrets_file(
+                        "credentials.json", SCOPES
+                    )
+                    creds = flow.run_local_server(port=0)
+                with open("token.json", "w") as token:
+                    token.write(creds.to_json())
+            return creds
 
-if __name__ == "__main__":
-    creds = authenticate()
-    service = build("calendar", "v3", credentials=creds)
-    mainn() 
+        def event_key(event):
+            # Use summary, location, start, and end as the key
+            summary = event.get("summary", "")
+            location = event.get("location", "")
+            start = event["start"].get("dateTime") or event["start"].get("date")
+            end = event["end"].get("dateTime") or event["end"].get("date")
+            return (summary, location, start, end)
+
+        def mainn():
+            
+            page_token = None
+            seen = set()
+            duplicates = []
+            try:
+                while True:
+                    events_result = service.events().list(
+                        calendarId='primary',
+                        pageToken=page_token,
+                        maxResults=2500,
+                        singleEvents=True,
+                        orderBy='startTime'
+                    ).execute()
+                    events = events_result.get('items', [])
+                    for event in events:
+                        key = event_key(event)
+                        if key in seen:
+                            duplicates.append(event)
+                        else:
+                            seen.add(key)
+                    page_token = events_result.get('nextPageToken')
+                    if not page_token:
+                        break
+                print(f"Found {len(duplicates)} duplicate events.")
+                if len(duplicates) == 0:
+                    return
+                for event in duplicates:
+                    try:
+                        service.events().delete(calendarId='primary', eventId=event['id']).execute()
+                        print(f"Deleted duplicate: {event.get('summary', '')} on {event['start']}")
+                    except HttpError as error:
+                        print(f"An error occurred: {error}")
+                mainn()
+            except Exception as e:
+                print(f"Error: {e}")
+
+        if __name__ == "__main__":
+            creds = authenticate()
+            service = build("calendar", "v3", credentials=creds)
+            mainn() 
+    except Exception as e: 
+        print(f"Error during run at {datetime.datetime.now()}: {e}")
+    time.sleep(1800)
