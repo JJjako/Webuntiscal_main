@@ -481,9 +481,6 @@ def main():
                     print(i, "nicht da")
                     Widerholenfertig = True
                 i = i + 1
-
-            notion_token = NOTION_TOKEN
-            database_id = NOTION_DATABASE_ID
         
             tomorrow = (datetime.date.today() + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
             
