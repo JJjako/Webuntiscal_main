@@ -418,11 +418,17 @@ def create_event(service, start_time, end_time, summary="Sample Event", descript
                         print(f"Error deleting event with same end time: {e}")
         
     for ka in klassenas:
-        if datetime.datetime.strftime(datetime.datetime.strptime(re.search(r'\d{2}/\d{2}/\d{4}', ka[5]).group(0), '%m/%d/%Y').date(),'%m/%d/%Y') == formatted_string and summary == ka[0]:
-            print("obacht 2")
-            event["colorId"] = "5"
-            event["reminders"] = {
-            "useDefault": False}
+        match = re.search(r'\d{2}/\d{2}/\d{4}', ka[5])
+        if match:
+            date_str = match.group(0)
+            if datetime.datetime.strftime(datetime.datetime.strptime(date_str, '%m/%d/%Y').date(),'%m/%d/%Y') == formatted_string and summary == ka[0]:
+                print("obacht 2")
+                event["colorId"] = "5"
+                event["reminders"] = {
+                "useDefault": False}
+        else:
+            # Handle the case where no date is found, e.g. skip or log
+            continue
     eventstart = event["start"]
     eventend = event["end"]
     schon_da = False
@@ -487,7 +493,9 @@ def main():
                 
                 try:
                     if item.code == "irregular":
-                        create_event(service, item.start.isoformat(), item.end.isoformat(), item.subjects[0].name, item.bkText,"2",item.rooms[0].name,events_da)
+                        subject = item.subjects[0].name if item.subjects else "Kein Fach"
+                        room = item.rooms[0].name if item.rooms else "Kein Raum"
+                        create_event(service, item.start.isoformat(), item.end.isoformat(), subject, item.bkText,"2",room,events_da)
                     else:
                         if item.code == "cancelled":
                             create_event(service, item.start.isoformat(), item.end.isoformat(), item.subjects[0].name,"","11",item.rooms[0].name,events_da)
