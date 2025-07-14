@@ -29,7 +29,7 @@ import time
 
 from typing import List, TypedDict
 
-from config_key import WEBUNTIS_USERNAME, WEBUNTIS_PASSWORD, WEBUNTIS_SCHOOL, NOTION_TOKEN, NOTION_DATABASE_ID
+from config_key import WEBUNTIS_USERNAME, WEBUNTIS_PASSWORD, WEBUNTIS_SCHOOL
 
 class ExamEntry(TypedDict):
     Fach: str
