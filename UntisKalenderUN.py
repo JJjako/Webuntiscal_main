@@ -121,7 +121,7 @@ def fetch_homework():
 
             options_container = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='Select-menu-outer']")))
             time.sleep(1)
-            year_option = options_container.find_element(By.XPATH, ".//*[text()='2024/2025']")
+            year_option = options_container.find_element(By.XPATH, ".//*[text()='2025/2026']")
             time.sleep(1)
             year_option.click()
         except Exception as e:
@@ -204,7 +204,7 @@ def fetch_homework():
 
             options_container = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='Select-menu-outer']")))
             time.sleep(1)
-            year_option = options_container.find_element(By.XPATH, ".//*[text()='2024/2025']")
+            year_option = options_container.find_element(By.XPATH, ".//*[text()='2025/2026']")
             time.sleep(1)
             year_option.click()
 
@@ -261,7 +261,7 @@ def fetch_homework():
 
             options_container = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='Select-menu-outer']")))
             time.sleep(1)
-            year_option = options_container.find_element(By.XPATH, ".//*[text()='2024/2025']")
+            year_option = options_container.find_element(By.XPATH, ".//*[text()='2025/2026']")
             time.sleep(1)
             year_option.click()
         except Exception as e:
@@ -473,8 +473,8 @@ def main():
         ).login() as s:
             elements = []
             service = build("calendar", "v3", credentials=creds)
-            klasse = s.klassen().filter(name="9b")[0]
-            endd_date = datetime.date(2025, 7, 30)
+            klasse = s.klassen().filter(name="10b")[0]
+            endd_date = datetime.date(2025, 12, 30)
             events_da = delete_events_in_date_range(service, datetime.date.today(), (datetime.date.today() + datetime.timedelta(days=400)))
             timetables = s.timetable_extended(klasse=klasse, start=(datetime.date.today()).strftime("%Y%m%d"), end=endd_date.strftime("%Y%m%d"))
             i = 0
@@ -494,8 +494,9 @@ def main():
                 try:
                     if item.code == "irregular":
                         subject = item.subjects[0].name if item.subjects else "Kein Fach"
+                        lehrer = item.teacher[0].name if item.teacher else ""
                         room = item.rooms[0].name if item.rooms else "Kein Raum"
-                        create_event(service, item.start.isoformat(), item.end.isoformat(), subject, item.bkText,"2",room,events_da)
+                        create_event(service, item.start.isoformat(), item.end.isoformat(), subject.join(lehrer), item.bkText,"2",room,events_da)
                     else:
                         if item.code == "cancelled":
                             create_event(service, item.start.isoformat(), item.end.isoformat(), item.subjects[0].name,"","11",item.rooms[0].name,events_da)
@@ -515,7 +516,7 @@ def main():
                         except:
                             create_event(service, item.start.isoformat(), item.end.isoformat(), "Bestonderes Event", "", "9", "",events_da)
                     
-    if False:
+    if True:
         for mensch in class_services_data:
             try:
                 start_date = datetime.datetime.strptime(mensch[3], "%a, %m/%d/%Y")
@@ -531,8 +532,8 @@ def main():
             except Exception as e:
                 # print(f"Error processing event for {mensch[0]} - {mensch[1]}: {e}")
                 continue
-while True:
-    try:
+if True:
+    if True:
         if __name__ == "__main__":
             alles = fetch_homework()
             hausis = alles[0]
@@ -606,6 +607,6 @@ while True:
             creds = authenticate()
             service = build("calendar", "v3", credentials=creds)
             mainn() 
-    except Exception as e: 
+    #except Exception as e: 
         print(f"Error during run at {datetime.datetime.now()}: {e}")
-    time.sleep(1800)
+    #time.sleep(1800)
